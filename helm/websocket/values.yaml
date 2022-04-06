@@ -1,0 +1,56 @@
+replicaCount: 1
+image:
+  repository: registy.arbwallet.host
+  tag: dev
+  pullPolicy: IfNotPresent
+
+env:
+  REDIS_HOST: redis-stg-master
+
+envBySecret:
+  - name: REDIS_PASS
+    secret: redis-stg
+    key: redis-password
+
+envFromSecret:
+  - ms-common
+  - sendgrid
+  - spaces
+
+ingress:
+  issuer: letsencrypt-prod
+  host: websocket.arbitragebussines.com
+  path: /
+
+internalPort: 4001
+externalPort: 80
+
+resources:
+  limits:
+    cpu: 800m
+    memory: 1024Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 15
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 90
+
+
+
+enableProbe: false
+probePath: /health
+livenessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+readinessProbe:
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+terminationGracePeriodSeconds: 10

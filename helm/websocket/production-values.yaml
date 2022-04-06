@@ -1,0 +1,58 @@
+replicaCount: 1
+image:
+  repository: registy.arbwallet.host
+  tag: dev
+  pullPolicy: IfNotPresent
+
+env:
+  REDIS_HOST: redis-pro-master
+  DD_APM: true
+  DD_TRACE_ANALYTICS_ENABLED: true
+  DD_RUNTIME_METRICS_ENABLED: true
+  DD_LOGS_INJECTION: true
+
+envBySecret:
+  - name: REDIS_PASS
+    secret: redis-pro
+    key: redis-password
+
+envFromSecret:
+  - ms-common
+  - sendgrid
+  - spaces
+
+ingress:
+  issuer: letsencrypt-prod
+  host: socket.arbwallet.io
+  path: /
+
+internalPort: 4001
+externalPort: 80
+
+resources:
+  limits:
+    cpu: 800m
+    memory: 1024Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 15
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 90
+
+enableProbe: true
+probePath: /health
+livenessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+readinessProbe:
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+terminationGracePeriodSeconds: 10

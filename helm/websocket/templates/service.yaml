@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "fullname" . }}
+    helm.sh/chart: {{ template "fullname" . }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.externalPort }}
+      targetPort: {{ .Values.internalPort }}
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "fullname" . }}

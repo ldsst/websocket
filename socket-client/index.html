@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <script src="socket.io.js"></script>
+    <script>
+      const socket = io('http://localhost:4001/');
+      socket.on('connect', function() {
+        console.log('Connected');
+        // socket.emit('place_order', {
+        //     pair: 'BTC/BRL',
+        //     userId: 2,
+        //     amount: 1,
+        //     price: 15000.50,
+        //     order_type: 'sell',
+        // }, (data) => `place order ${console.log(data)}`);
+        // socket.emit('ticker', { pair: 'BTC/BRL' }, (data) => console.log(data))
+        // socket.emit('order_book', { pair: 'BTC/BRL' }, (data) => console.log(data))
+        // socket.emit('trades', { pair: 'BTC/BRL' })
+        // socket.emit('my-event', { message: 'Testando evento broadcast' });
+        // socket.emit('order_delete', { orderIdentificator: 'MYLCBUJB2RG', userId: 2 }, (data) => console.log(data))
+      });
+      socket.on('place_order', function(data) {
+        console.log('place_order', data);
+      });
+      socket.on('my-event', function(data) {
+        console.log('my-event', data);
+      });
+      socket.on('order_book', function(data) {
+        console.log('order_book', data);
+      });
+      socket.on('ticker', function(data) {
+        console.log('ticker', data);
+      });
+      socket.on('trades', function(data) {
+        console.log('trades', data);
+      });
+      socket.on('exception', function(data) {
+        console.log('event', data);
+      });
+      socket.on('disconnect', function() {
+        console.log('Disconnected');
+      });
+    </script>
+  </head>
+
+  <body></body>
+</html>
